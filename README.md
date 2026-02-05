@@ -1,146 +1,131 @@
-# 📘 LAPORAN HASIL PRAKTIKUM OOP PYTHON
----
-## 🔹 Praktikum 1 & 2 – Class dan Object
+#  TUGAS ANALISIS PRAKTIKUM OOP
 
-### Tujuan
+## 🔹 Tugas Analisis 1
 
-Memahami konsep **class**, **object**, **attribute**, dan **method** dalam Python.
+**Pertanyaan:**
+Apa yang terjadi jika `hero1.hp` diubah menjadi 500 lalu dilakukan `print(hero1.hp)`?
 
-### Penjelasan
+**Jawaban:**
+Nilai HP hero akan langsung berubah menjadi **500** dan berhasil ditampilkan saat dipanggil dengan `print(hero1.hp)`.
 
-Pada praktikum ini dibuat class `Hero` yang memiliki:
-
-* **Attribute:** `name`, `hp`, `attack_power`
-* **Method:** `info()`, `serang()`, dan `diserang()`
-
-Dua object dibuat dari class Hero, yaitu `Layla` dan `Zilong`, lalu dilakukan simulasi serangan antar hero.
-
-### Output Program
-
-* Menampilkan informasi hero
-* Hero saling menyerang
-* HP lawan berkurang sesuai attack power
-
-### Analisis
-
-Konsep OOP dasar diterapkan dengan baik karena:
-
-* Object memiliki data dan perilaku sendiri
-* Interaksi antar object terjadi melalui method
+**Penjelasan:**
+Karena attribute `hp` pada class `Hero` bersifat **public**, maka nilainya bisa diubah langsung dari luar class tanpa pembatasan. Hal ini menunjukkan bahwa tanpa encapsulation, data object bisa dimodifikasi secara bebas, termasuk ke nilai yang tidak realistis dalam konteks game.
 
 ---
 
-## 🔹 Praktikum 3 – Inheritance (Pewarisan)
+## 🔹 Tugas Analisis 2
 
-### Tujuan
+**Pertanyaan:**
+Mengapa parameter `lawan` pada method `serang` harus berupa objek, bukan string?
 
-Memahami konsep **inheritance**, yaitu class turunan dari class induk.
+**Jawaban:**
+Karena parameter `lawan` digunakan untuk **mengakses method dan attribute milik object lain**, seperti `lawan.diserang()` dan `lawan.name`.
 
-### Penjelasan
-
-Class `Mage` dibuat sebagai turunan dari `Hero`.
-Class ini menambahkan:
-
-* Attribute `mana`
-* Method khusus `skill_fireball()`
-
-Mage tetap bisa menggunakan method milik Hero seperti `serang()`.
-
-### Output Program
-
-* Mage menampilkan info HP dan Mana
-* Mage menyerang hero lain
-* Mage menggunakan skill Fireball jika mana cukup
-
-### Analisis
-
-Inheritance membuat kode lebih efisien karena:
-
-* Tidak perlu menulis ulang atribut dan method Hero
-* Class Mage menjadi lebih spesifik dengan kemampuan tambahan
+**Penjelasan:**
+Jika hanya menggunakan string nama, maka object tersebut tidak memiliki method atau data lain. Dengan menerima object utuh, interaksi antar hero menjadi nyata dan sesuai konsep OOP, yaitu **object saling berkomunikasi melalui method**.
 
 ---
 
-## 🔹 Praktikum 4 – Encapsulation
+## 🔹 Tugas Analisis 3
 
-### Tujuan
+### 1. Error yang Muncul
 
-Memahami konsep **encapsulation** (pembatasan akses data).
+Jika `super().__init__(name, hp, attack_power)` dihapus, maka saat menjalankan `eudora.info()` akan muncul error:
 
-### Penjelasan
+> **AttributeError: 'Mage' object has no attribute 'name'**
 
-Class `HeroEncap` menggunakan attribute private `__hp`.
-Akses HP hanya bisa melalui:
+### 2. Mengapa Error Terjadi?
 
-* `get_hp()`
-* `set_hp()`
+Walaupun nilai `"Eudora"` dikirim saat pembuatan object, attribute `name`, `hp`, dan `attack_power` **seharusnya dibuat oleh constructor milik class Hero**.
+Karena constructor Hero tidak dipanggil, maka attribute tersebut **tidak pernah dibuat**.
 
-Nilai HP dibatasi agar tidak negatif dan tidak melebihi 1000.
+### 3. Peran `super()`
 
-### Output Program
+Fungsi `super()` berfungsi untuk:
 
-* HP tidak bisa diatur sembarangan
-* Jika HP negatif, otomatis menjadi 0
+* Memanggil constructor class Induk
+* Menghubungkan data dari class Anak ke class Induk
+* Memastikan attribute dasar tetap dimiliki oleh object turunan
 
-### Analisis
-
-Encapsulation menjaga data tetap aman dan valid, serta mencegah manipulasi langsung dari luar class.
+Tanpa `super()`, object Mage menjadi tidak lengkap.
 
 ---
 
-## 🔹 Praktikum 5 – Abstract Class & Interface
+## 🔹 Tugas Analisis 4
 
-### Tujuan
+### 1. Percobaan Hacking
 
-Memahami konsep **abstract class** menggunakan modul `abc`.
+**Hasil:**
+Nilai HP **tetap muncul**, tidak error.
 
-### Penjelasan
+**Penjelasan:**
+Python menggunakan **Name Mangling**, di mana `__hp` diubah menjadi `_HeroEncap__hp`.
+Hal ini masih bisa diakses secara teknis, namun **melanggar prinsip encapsulation**.
 
-Class `GameUnit` dibuat sebagai abstract class dengan method:
-
-* `serang()`
-* `info()`
-
-Class `HeroUnit` dan `Monster` wajib mengimplementasikan method tersebut.
-
-### Output Program
-
-* Hero dan Monster menampilkan identitas
-* Hero dan Monster memiliki cara menyerang berbeda
-
-### Analisis
-
-Abstract class memastikan setiap class turunan memiliki struktur method yang sama, sehingga program lebih terorganisir.
+**Kesimpulan:**
+Walaupun bisa, cara ini **tidak dianjurkan** karena merusak keamanan dan keterbacaan kode.
 
 ---
 
-## 🔹 Praktikum 6 – Polymorphism
+### 2. Uji Validasi Setter
 
-### Tujuan
+Jika validasi dihapus dan dilakukan `hero1.set_hp(-100)`:
 
-Memahami konsep **polymorphism**, yaitu method yang sama tetapi perilaku berbeda.
+**Hasil:**
+HP akan menjadi **-100**.
 
-### Penjelasan
-
-Beberapa class (`MagePoly`, `ArcherPoly`, `FighterPoly`) memiliki method `serang()` dengan aksi berbeda.
-
-Semua object disimpan dalam satu list dan dipanggil menggunakan satu method yang sama.
-
-### Output Program
-
-* Setiap hero menyerang dengan gaya berbeda
-* Method `serang()` menghasilkan output sesuai tipe hero
-
-### Analisis
-
-Polymorphism membuat program fleksibel dan mudah dikembangkan tanpa mengubah struktur utama.
+**Penjelasan:**
+Tanpa setter yang memvalidasi data, nilai tidak logis dapat masuk ke sistem.
+Setter sangat penting untuk menjaga **integritas data**, terutama dalam game agar tidak terjadi bug atau cheating.
 
 ---
 
-## ✅ Kesimpulan
+## 🔹 Tugas Analisis 5
 
-Dari praktikum 1–6 dapat disimpulkan bahwa:
+### 1. Melanggar Kontrak Interface
 
-* OOP mempermudah pengelolaan kode
-* Setiap konsep OOP saling berkaitan
-* Program menjadi lebih rapi, aman, dan scalable
+**Error yang muncul:**
+
+> Can't instantiate abstract class Hero with abstract method serang
+
+**Makna Error:**
+Class yang mewarisi abstract class **wajib mengimplementasikan semua method abstrak**.
+
+**Konsekuensi:**
+Jika method yang dijanjikan di interface tidak dibuat, maka class tersebut **tidak bisa dijadikan object**.
+
+---
+
+### 2. Mengapa GameUnit Tidak Bisa Dibuat Object?
+
+Karena `GameUnit` adalah **abstract class**, ia hanya berfungsi sebagai:
+
+* Cetakan
+* Standar struktur
+* Kontrak method
+
+Gunanya adalah untuk memastikan semua unit game memiliki perilaku dasar yang sama.
+
+---
+
+## 🔹 Tugas Analisis 6
+
+### 1. Uji Skalabilitas (Healer)
+
+**Hasil:**
+Program **berjalan lancar tanpa error**.
+
+**Kesimpulan:**
+Polimorfisme memungkinkan penambahan karakter baru **tanpa mengubah kode lama**, sehingga game mudah dikembangkan di masa depan.
+
+---
+
+### 2. Konsistensi Penamaan Method
+
+Jika method `serang` diganti menjadi `tembak_panah`:
+
+**Hasil:**
+Program mengalami **AttributeError**.
+
+**Penjelasan:**
+Dalam polimorfisme, semua class turunan harus memiliki **nama method yang sama**, agar bisa dipanggil secara seragam melalui parent reference atau looping.
